@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="assets/styles.css">     -->
+</head>
+<body>
+
+
+<div class="container">
+<div class="jumbotron"> 
+    <h1 class="display-4">Anytime is Train Time </h1>
+    <p class="lead"> Choo choo. Chee chee.  </p>
+</div>
+
+<div id="current-schedule-container">
+    <table class="table table-striped">
+        <tr>
+                
+            <th> Train Name </th>
+            <th> Destination </th>
+            <th> First Train Time </th>
+            <th> Frequency </th>
+            <th> Next Arrival </th>
+            <th> Minutes Away </th>
+        </tr>
+        <tr>
+            <td>Oregon Trail</td>
+            <td>Salem Oregon</td>
+            <td>9:00am </td>
+            <td>25 </td>
+            <td>1:39pm</td>
+            <td>10</td>
+        </tr>
+    </table>
+
+</div>
+
+
+<div id="add-train-container">
+
+        <form>
+            <div class="form-group">
+                <label for="train-name">Train Name</label>
+                <input type="text" class="form-control" id="train-name" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="destination">Destination</label>
+                <input type="text" class="form-control" id="destination" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="first-train-time">First Train Time</label>
+                <input type="text" class="form-control" id="first-train-time" placeholder="">
+            </div>
+
+                <div class="form-group">
+                <label for="frequency">Frequency</label>
+                <input type="text" class="form-control" id="frequency" placeholder="">
+            </div>
+                
+        <button type="submit" class="btn btn-default" id="submit-button">Submit</button>
+        </form>
+
+</div>
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script>
+
+
+
+// When adding trains, administrators should be able to submit the following:
+// Train Name
+// Destination
+// First Train Time -- in military time
+// Frequency -- in minutes
+// Code this app to calculate when the next train will arrive; this should be relative to the current time.
+// Users from many different machines must be able to view same train times.
+// Styling and theme are completely up to you. Get Creative!    
+
+var config = {
+    apiKey: "AIzaSyBVNSifQQOX7YTMRfhxG8kcNd4iqhlmW4A",
+    authDomain: "haley-s-superrad-project.firebaseapp.com",
+    databaseURL: "https://haley-s-superrad-project.firebaseio.com",
+    projectId: "haley-s-superrad-project",
+    storageBucket: "haley-s-superrad-project.appspot.com",
+    messagingSenderId: "646651781673"
+  };
+  firebase.initializeApp(config);
+
+  var database = firebase.database()  
+
+  //var dataVals = database.ref()
+
+database.ref().on("child_added",function(snap){
+    //console.log(snap.val())
+
+    var trainNameData = snap.val().trainName
+    var destinationData = snap.val().destination
+    var firstTrainTimeData = snap.val().firstTrainTime
+    var frequencyData = snap.val().frequency
+
+    console.log(trainNameData)
+    console.log(destinationData)
+    console.log(firstTrainTimeData)
+    console.log(frequencyData)
+
+    var nextArrival = "12"
+    var minutesAway = "20"
+
+    var newRow = $("<tr><td>" + trainNameData + "</td><td>" + destinationData + "</td><td>" + firstTrainTimeData + "</td><td>" + frequencyData + "</td><td>" + nextArrival +"</td><td>" + minutesAway + "</td></tr>")
+    $(".table").append(newRow)
+
+})  
+     
+
+$("#submit-button").on("click", function() {
+   var trainName =  $("#train-name").val()
+   console.log(trainName)
+
+   var destination =  $("#destination").val()
+   console.log(destination)
+
+   var firstTrainTime =  $("#first-train-time").val()
+   console.log(firstTrainTime)
+
+   var frequency =  $("#frequency").val()
+   console.log(frequency)
+
+   database.ref().push({
+       trainName: trainName,
+       destination: destination,
+       firstTrainTime: firstTrainTime,
+       frequency: frequency
+   })
+
+
+})
+     
+</script>
+</body>
+</html>
